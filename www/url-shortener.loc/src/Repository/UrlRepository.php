@@ -40,4 +40,14 @@ class UrlRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+    public function findByNotSent(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.sent = :val')
+            ->setParameter('val', false)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

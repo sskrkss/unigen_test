@@ -26,6 +26,9 @@ class Url
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $expireDate;
 
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $sent = false;
+
     public function __construct()
     {
         $createdDate = new \DateTimeImmutable();
@@ -85,5 +88,15 @@ class Url
     public function setExpireDate(\DateTimeImmutable $expireDate): void
     {
         $this->expireDate = $expireDate;
+    }
+
+    public function isSent(): bool
+    {
+        return $this->sent;
+    }
+
+    public function setSent(bool $sent): void
+    {
+        $this->sent = $sent;
     }
 }

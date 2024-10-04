@@ -51,4 +51,11 @@ class UrlController extends AbstractController
     {
         return $this->redirect('/'.$this->urlService->decode($decodeUrlDto));
     }
+
+    #[OA\Tag(name: 'url-shortener')]
+    #[Route('/api/v1/command-test', name: 'command_test', methods: 'POST')]
+    public function commandTest(Request $request): JsonResponse
+    {
+        return $this->json(['sentUrl' => json_decode($request->getContent())]);
+    }
 }
