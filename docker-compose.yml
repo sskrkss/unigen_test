@@ -17,6 +17,7 @@ services:
             - unigine_test_mysql
         volumes:
             - ./www:/var/www
+        working_dir: /var/www/url-shortener.loc
     unigine_test_mysql:
         image: mariadb:latest
         ports:
