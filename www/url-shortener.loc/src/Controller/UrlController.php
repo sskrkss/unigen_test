@@ -26,6 +26,7 @@ class UrlController extends AbstractController
 
     #[Route('/api/v1/encode-url', name: 'encode_url', methods: 'POST')]
     #[OA\Tag(name: 'url-shortener')]
+    #[OA\Response(response: 200, description: 'Запись и получение hash url')]
     #[OA\Response(response: 400, description: 'Ошибка валидации')]
     public function encodeUrl(#[MapRequestPayload(resolver: RequestBodyResolver::class)] EncodeUrlDto $encodeUrlDto): JsonResponse
     {
@@ -34,6 +35,7 @@ class UrlController extends AbstractController
 
     #[Route('/api/v1/decode-url', name: 'decode_url', methods: 'GET')]
     #[OA\Tag(name: 'url-shortener')]
+    #[OA\Response(response: 200, description: 'Получение url по его hash')]
     #[OA\Response(response: 400, description: 'Ошибка валидации')]
     #[OA\Response(response: 404, description: 'Url не найден')]
     #[OA\Response(response: 410, description: 'Срок действия закодированного url истек (15 сек)')]
@@ -44,15 +46,17 @@ class UrlController extends AbstractController
 
     #[Route('/api/v1/redirect-decode-url', name: 'redirect-decode_url', methods: 'GET')]
     #[OA\Tag(name: 'url-shortener')]
+    #[OA\Response(response: 200, description: 'Редирект на url по его hash')]
     #[OA\Response(response: 400, description: 'Ошибка валидации')]
     #[OA\Response(response: 404, description: 'Url не найден')]
     #[OA\Response(response: 410, description: 'Срок действия закодированного url истек (15 сек)')]
     public function redirectDecodeUrl(#[MapQueryString(resolver: RequestQueryResolver::class)] DecodeUrlDto $decodeUrlDto): RedirectResponse
     {
-        return $this->redirect('/'.$this->urlService->decode($decodeUrlDto));
+        return $this->redirect($this->urlService->decode($decodeUrlDto));
     }
 
     #[OA\Tag(name: 'url-shortener')]
+    #[OA\Response(response: 200, description: 'Эндпоинт для тестирования command app:url-send')]
     #[Route('/api/v1/command-test', name: 'command_test', methods: 'POST')]
     public function commandTest(Request $request): JsonResponse
     {

@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class EncodeUrlDto
 {
     #[Assert\NotBlank(message: 'url не должен быть пустым')]
+    #[Assert\Url(message: 'url не валиден')]
     private string $url;
 
     public function getUrl(): string
