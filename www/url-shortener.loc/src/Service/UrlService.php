@@ -17,9 +17,12 @@ class UrlService
 
     public function encode(EncodeUrlDto $encodeUrlDto): string
     {
-        $url = (new Url())->setUrl($encodeUrlDto->getUrl());
+        $url = $this->urlRepository->findOneByUrl($encodeUrlDto->getUrl());
 
-        $this->urlRepository->saveAndCommit($url);
+        if (null === $url) {
+            $url = (new Url())->setUrl($encodeUrlDto->getUrl());
+            $this->urlRepository->saveAndCommit($url);
+        }
 
         return $url->getHash();
     }

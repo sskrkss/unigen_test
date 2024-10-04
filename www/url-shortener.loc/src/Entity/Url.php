@@ -12,7 +12,7 @@ class Url
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     private string $url;
