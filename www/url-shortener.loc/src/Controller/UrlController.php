@@ -2,47 +2,51 @@
 
 namespace App\Controller;
 
-use App\Entity\Url;
-use App\Repository\UrlRepository;
+use App\Model\DecodeUrlDto;
+use App\Model\EncodeUrlDto;
+use App\Resolver\RequestBodyResolver;
+use App\Resolver\RequestQueryResolver;
+use App\Service\UrlService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use OpenApi\Attributes as OA;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UrlController extends AbstractController
 {
-    /**
-     * @Route("/encode-url", name="encode_url")
-     */
-    public function encodeUrl(Request $request): JsonResponse
-    {
-        $url = new Url();
-        $url->setUrl($request->get('url'));
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($url);
-        $entityManager->flush();
-
-        return $this->json([
-            'hash' => $url->getHash()
-        ]);
+    public function __construct(
+        private readonly UrlService $urlService,
+    ) {
     }
 
-    /**
-     * @Route("/decode-url", name="decode_url")
-     */
-    public function decodeUrl(Request $request): JsonResponse
+    #[Route('/api/v1/encode-url', name: 'encode_url', methods: 'POST')]
+    #[OA\Tag(name: 'url-shortener')]
+    #[OA\Response(response: 400, description: 'Ошибка валидации')]
+    public function encodeUrl(#[MapRequestPayload(resolver: RequestBodyResolver::class)] EncodeUrlDto $encodeUrlDto): JsonResponse
     {
-        /** @var UrlRepository $urlRepository */
-        $urlRepository = $this->getDoctrine()->getRepository(Url::class);
-        $url = $urlRepository->findOneByHash($request->get('hash'));
-        if (empty ($url)) {
-            return $this->json([
-                'error' => 'Non-existent hash.'
-            ]);
-        }
-        return $this->json([
-            'url' => $url->getUrl()
-        ]);
+        return $this->json(['hash' => $this->urlService->encode($encodeUrlDto)]);
+    }
+
+    #[Route('/api/v1/decode-url', name: 'decode_url', methods: 'GET')]
+    #[OA\Tag(name: 'url-shortener')]
+    #[OA\Response(response: 400, description: 'Ошибка валидации')]
+    #[OA\Response(response: 404, description: 'Url не найден')]
+    public function decodeUrl(#[MapQueryString(resolver: RequestQueryResolver::class)] DecodeUrlDto $decodeUrlDto): JsonResponse
+    {
+        return $this->json(['url' => $this->urlService->decode($decodeUrlDto)]);
+    }
+
+    #[Route('/api/v1/redirect-decode-url', name: 'redirect-decode_url', methods: 'GET')]
+    #[OA\Tag(name: 'url-shortener')]
+    #[OA\Response(response: 400, description: 'Ошибка валидации')]
+    #[OA\Response(response: 404, description: 'Url не найден')]
+    public function redirectDecodeUrl(#[MapQueryString(resolver: RequestQueryResolver::class)] DecodeUrlDto $decodeUrlDto): RedirectResponse
+    {
+        return $this->redirect('/'.$this->urlService->decode($decodeUrlDto));
     }
 }

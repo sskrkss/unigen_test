@@ -3,34 +3,25 @@
 namespace App\Entity;
 
 use App\Repository\UrlRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=UrlRepository::class)
- */
+#[ORM\Entity(repositoryClass: UrlRepository::class)]
 class Url
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $url;
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private string $url;
 
-    /**
-     * @ORM\Column(type="string", length=14)
-     */
-    private $hash;
+    #[ORM\Column(type: Types::STRING, length: 14)]
+    private string $hash;
 
-    /**
-     * @ORM\Column(name="created_date", type="datetime_immutable")
-     */
-    private $createdDate;
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, length: 255)]
+    private \DateTimeImmutable $createdDate;
 
     public function __construct()
     {
@@ -39,12 +30,12 @@ class Url
         $this->setHash($date->format('YmdHis'));
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getUrl(): ?string
+    public function getUrl(): string
     {
         return $this->url;
     }
@@ -56,7 +47,7 @@ class Url
         return $this;
     }
 
-    public function getHash(): ?string
+    public function getHash(): string
     {
         return $this->hash;
     }
@@ -68,7 +59,7 @@ class Url
         return $this;
     }
 
-    public function getCreatedDate(): ?\DateTimeImmutable
+    public function getCreatedDate(): \DateTimeImmutable
     {
         return $this->createdDate;
     }

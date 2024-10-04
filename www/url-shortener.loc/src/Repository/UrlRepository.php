@@ -14,6 +14,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UrlRepository extends ServiceEntityRepository
 {
+    use RepositoryModifyTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Url::class);
