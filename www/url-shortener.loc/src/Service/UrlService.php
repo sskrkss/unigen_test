@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Url;
+use App\Exception\UrlExpiredException;
 use App\Exception\UrlNotFoundException;
 use App\Model\DecodeUrlDto;
 use App\Model\EncodeUrlDto;
@@ -29,11 +30,14 @@ class UrlService
 
     public function decode(DecodeUrlDto $decodeUrlDto): string
     {
-
         $url = $this->urlRepository->findOneByHash($decodeUrlDto->getHash());
 
         if (null === $url) {
             throw new UrlNotFoundException();
+        }
+
+        if ($url->getExpireDate() < new \DateTimeImmutable()) {
+            throw new UrlExpiredException();
         }
 
         return $url->getUrl();

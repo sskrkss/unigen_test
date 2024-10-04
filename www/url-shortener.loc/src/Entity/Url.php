@@ -23,11 +23,17 @@ class Url
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $createdDate;
 
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private \DateTimeImmutable $expireDate;
+
     public function __construct()
     {
-        $date = new \DateTimeImmutable();
-        $this->setCreatedDate($date);
-        $this->setHash($date->format('YmdHis'));
+        $createdDate = new \DateTimeImmutable();
+        $expireDate = (new \DateTimeImmutable())->modify('+15 seconds');
+
+        $this->setCreatedDate($createdDate);
+        $this->setExpireDate($expireDate);
+        $this->setHash($createdDate->format('YmdHis'));
     }
 
     public function getId(): int
@@ -69,5 +75,15 @@ class Url
         $this->createdDate = $createdDate;
 
         return $this;
+    }
+
+    public function getExpireDate(): \DateTimeImmutable
+    {
+        return $this->expireDate;
+    }
+
+    public function setExpireDate(\DateTimeImmutable $expireDate): void
+    {
+        $this->expireDate = $expireDate;
     }
 }

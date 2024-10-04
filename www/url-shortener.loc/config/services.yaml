@@ -9,6 +9,7 @@ parameters:
         App\Exception\RequestWrongTypeException: { code: 400, hidden: false },
         App\Exception\RequestConstraintException: { code: 400, hidden: false },
         App\Exception\UrlNotFoundException: { code: 404, hidden: false },
+        App\Exception\UrlExpiredException: { code: 410, hidden: false },
         Exception: { code: 500, hidden: false }
 
 services:

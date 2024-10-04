@@ -36,6 +36,7 @@ class UrlController extends AbstractController
     #[OA\Tag(name: 'url-shortener')]
     #[OA\Response(response: 400, description: 'Ошибка валидации')]
     #[OA\Response(response: 404, description: 'Url не найден')]
+    #[OA\Response(response: 410, description: 'Срок действия закодированного url истек (15 сек)')]
     public function decodeUrl(#[MapQueryString(resolver: RequestQueryResolver::class)] DecodeUrlDto $decodeUrlDto): JsonResponse
     {
         return $this->json(['url' => $this->urlService->decode($decodeUrlDto)]);
@@ -45,6 +46,7 @@ class UrlController extends AbstractController
     #[OA\Tag(name: 'url-shortener')]
     #[OA\Response(response: 400, description: 'Ошибка валидации')]
     #[OA\Response(response: 404, description: 'Url не найден')]
+    #[OA\Response(response: 410, description: 'Срок действия закодированного url истек (15 сек)')]
     public function redirectDecodeUrl(#[MapQueryString(resolver: RequestQueryResolver::class)] DecodeUrlDto $decodeUrlDto): RedirectResponse
     {
         return $this->redirect('/'.$this->urlService->decode($decodeUrlDto));
