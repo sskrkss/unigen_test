@@ -20,7 +20,7 @@ class Url
     #[ORM\Column(type: Types::STRING, length: 14)]
     private string $hash;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE, length: 255)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $createdDate;
 
     public function __construct()
