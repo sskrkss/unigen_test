@@ -85,9 +85,11 @@ class Url
         return $this->expireDate;
     }
 
-    public function setExpireDate(\DateTimeImmutable $expireDate): void
+    public function setExpireDate(\DateTimeImmutable $expireDate): self
     {
         $this->expireDate = $expireDate;
+
+        return $this;
     }
 
     public function isSent(): bool
@@ -95,8 +97,10 @@ class Url
         return $this->sent;
     }
 
-    public function setSent(bool $sent): void
+    public function setSent(bool $sent): self
     {
         $this->sent = $sent;
+
+        return $this;
     }
 }

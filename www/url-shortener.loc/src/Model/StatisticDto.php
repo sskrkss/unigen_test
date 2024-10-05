@@ -20,9 +20,11 @@ class StatisticDto
         return $this->domain;
     }
 
-    public function setDomain(string $domain): void
+    public function setDomain(string $domain): self
     {
         $this->domain = $domain;
+
+        return $this;
     }
 
     public function getDateFrom(): ?string
@@ -30,9 +32,11 @@ class StatisticDto
         return $this->dateFrom;
     }
 
-    public function setDateFrom(?string $dateFrom): void
+    public function setDateFrom(?string $dateFrom): self
     {
         $this->dateFrom = $dateFrom;
+
+        return $this;
     }
 
     public function getDateTo(): ?string
@@ -40,8 +44,10 @@ class StatisticDto
         return $this->dateTo;
     }
 
-    public function setDateTo(?string $dateTo): void
+    public function setDateTo(?string $dateTo): self
     {
         $this->dateTo = $dateTo;
+
+        return $this;
     }
 }

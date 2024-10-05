@@ -19,6 +19,7 @@ class StatisticService
 
         return [
             'Количество уникальных url за заданный промежуток времени' => $countUniqueUrls,
-            'Количество уникальных url с указанным доменом' => $countUniqueDomain];
+            'Количество уникальных url с указанным доменом' => $countUniqueDomain,
+        ];
     }
 }
