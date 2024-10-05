@@ -39,22 +39,26 @@ class UrlSendCommand extends Command
         /** @var Url[] $newUrls */
         $newUrls = $this->urlRepository->findByNotSent();
 
-        $data = [];
+        $data = ['urls' => []];
         foreach ($newUrls as $newUrl) {
-            $data[] = [
-                $newUrl->getUrl(),
-                $newUrl->getCreatedDate()->format('Y-m-d H:i:s')
+            $data['urls'][] = [
+                'url' => $newUrl->getUrl(),
+                'createdDate' => $newUrl->getCreatedDate()->format('Y-m-d H:i:s'),
             ];
             $newUrl->setSent(true);
         }
+
         $this->urlRepository->commit();
 
-        $response = $this->client->request('POST', $this->targetEndpoint, ['json' => $data]);
-        $statusCode = $response->getStatusCode();
-        $content = $response->getContent();
+        try {
+            $this->client->request('POST', $this->targetEndpoint, ['json' => $data]);
+        } catch (ClientExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            $responseContent = json_decode($e->getResponse()->getContent(false), true);
+            $io->error('Cтатус-код '.$statusCode.'. '.$responseContent['message'] ?? '');
 
-        $output->writeln("Статус код: $statusCode");
-        $output->writeln("Ответ: $content");
+            return Command::FAILURE;
+        }
 
         $io->success('Новые url отправлены');
 

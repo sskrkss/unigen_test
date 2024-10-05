@@ -27,8 +27,7 @@ class UrlRepository extends ServiceEntityRepository
             ->andWhere('u.hash = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findOneByUrl(string $value): ?Url
@@ -37,8 +36,7 @@ class UrlRepository extends ServiceEntityRepository
             ->andWhere('u.url = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findByNotSent(): array
@@ -47,7 +45,6 @@ class UrlRepository extends ServiceEntityRepository
             ->andWhere('u.sent = :val')
             ->setParameter('val', false)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 }
